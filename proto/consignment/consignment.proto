@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+// Messages themselves are just custom types
+
 package go.micro.srv.consignment;
 
 service ShippingService {
