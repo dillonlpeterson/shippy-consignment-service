@@ -5,9 +5,9 @@ import (
 
 	"golang.org/x/net/context"
 
-	vesselProto "bitbucket.org/dillonlpeterson/shippy/vessel-service/proto/vessel"
+	vesselProto "github.com/dillonlpeterson/shippy-vessel-service/proto/vessel"
 
-	pb "bitbucket.org/dillonlpeterson/shippy/consignment-service/proto/consignment"
+	pb "github.com/dillonlpeterson/shippy-consignment-service/proto/consignment"
 	micro "github.com/micro/go-micro"
 )
 
