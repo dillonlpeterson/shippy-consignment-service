@@ -5,7 +5,7 @@ build:
 	# Builds an image by the name consignment-service (Dot means that build process looks in current directory)
 	docker build -t consignment-service .
 run: 
-	docker run -p 50051:50051 -e MICRO_SERVER_ADDRESS=:50051 -e MICRO_REGISTRY=mdns consignment-service
+	docker run -p 50051:50051 -e MICRO_SERVER_ADDRESS=:50051 -e MICRO_REGISTRY=mdns shippy-consignment-service
 
 
 
