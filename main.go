@@ -5,6 +5,8 @@ import (
 
 	"golang.org/x/net/context"
 
+	vesselProto "bitbucket.org/dillonlpeterson/shippy/vessel-service/proto/vessel"
+
 	pb "bitbucket.org/dillonlpeterson/shippy/consignment-service/proto/consignment"
 	micro "github.com/micro/go-micro"
 )
@@ -41,10 +43,24 @@ func (repo *ConsignmentRepository) GetAll() []*pb.Consignment {
 // in the generate code itself for the exact method signatures etc. to
 // give you a better idea
 type service struct {
-	repo Repository
+	repo         Repository
+	VesselClient vesselProto.VesselServiceClient
 }
 
 func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
+	// Shoutout to our VesselService
+	vesselResponse, err := s.VesselClient.FindAvailable(context.Background(), &vesselProto.Specification{
+		MaxWeight: req.Weight,
+		Capacity:  int32(len(req.Containers)),
+	})
+	log.Printf("Found vessel: %s \n", vesselResponse.Vessel.Name)
+	if err != nil {
+		return err
+	}
+
+	// We set the VesselID as the vessel we got back from our
+	// vessel service
+	req.VesselId = vesselResponse.Vessel.Id
 	// Save our consignment
 	consignment, err := s.repo.Create(req)
 	if err != nil {
@@ -72,9 +88,11 @@ func main() {
 		micro.Version("latest"),
 	)
 
+	vesselClient := vesselProto.NewVesselServiceClient("go.micro.srv.vessel", srv.Client())
+
 	srv.Init()
 
-	pb.RegisterShippingServiceHandler(srv.Server(), &service{repo})
+	pb.RegisterShippingServiceHandler(srv.Server(), &service{repo, vesselClient})
 
 	if err := srv.Run(); err != nil {
 		log.Fatalf("failed to serve: %v", err)
