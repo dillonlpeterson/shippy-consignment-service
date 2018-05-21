@@ -1,9 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
-
-	"golang.org/x/net/context"
+	"os"
 
 	vesselProto "github.com/dillonlpeterson/shippy-vessel-service/proto/vessel"
 
@@ -12,74 +12,25 @@ import (
 )
 
 const (
-	port = ":50051"
+	port        = ":50051"
+	defaultHost = "localhost:27017"
 )
 
-// Repository is interface for ConsignmentRepository
-type Repository interface {
-	Create(*pb.Consignment) (*pb.Consignment, error)
-	GetAll() []*pb.Consignment
-}
-
-// ConsignmentRepository is a dummy Repo
-type ConsignmentRepository struct {
-	consignments []*pb.Consignment
-}
-
-// Create created a consignment object.
-func (repo *ConsignmentRepository) Create(consignment *pb.Consignment) (*pb.Consignment, error) {
-	updated := append(repo.consignments, consignment)
-	repo.consignments = updated
-	return consignment, nil
-}
-
-// GetAll returns all existing Consignments
-func (repo *ConsignmentRepository) GetAll() []*pb.Consignment {
-	return repo.consignments
-}
-
-// Service should implement all of the methods to satisfy the service
-// we defined in our protobuf definition. You can check the interface
-// in the generate code itself for the exact method signatures etc. to
-// give you a better idea
-type service struct {
-	repo         Repository
-	VesselClient vesselProto.VesselServiceClient
-}
-
-func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
-	// Shoutout to our VesselService
-	vesselResponse, err := s.VesselClient.FindAvailable(context.Background(), &vesselProto.Specification{
-		MaxWeight: req.Weight,
-		Capacity:  int32(len(req.Containers)),
-	})
-	log.Printf("Found vessel: %s \n", vesselResponse.Vessel.Name)
-	if err != nil {
-		return err
-	}
-
-	// We set the VesselID as the vessel we got back from our
-	// vessel service
-	req.VesselId = vesselResponse.Vessel.Id
-	// Save our consignment
-	consignment, err := s.repo.Create(req)
-	if err != nil {
-		return err
-	}
-	res.Created = true
-	res.Consignment = consignment
-	// Return the matching 'Response' message we created in our protobuf definition.
-	return nil
-}
-
-func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest, res *pb.Response) error {
-	consignments := s.repo.GetAll()
-	res.Consignments = consignments
-	return nil
-}
-
 func main() {
-	repo := &ConsignmentRepository{}
+	// Database host from the environment variables
+	host := os.Getenv("DB_HOST")
+
+	if host == "" {
+		host = defaultHost
+	}
+	session, err := CreateSession(host)
+	defer session.Close()
+
+	if err != nil {
+		// We're wrapping the error returned from our CreateSession
+		// here to add some context to the error
+		log.Panicf("Could not connect to datastore with host %s - %v", host, err)
+	}
 
 	// Set-up our gRPC server.
 	srv := micro.NewService(
@@ -95,6 +46,6 @@ func main() {
 	pb.RegisterShippingServiceHandler(srv.Server(), &service{repo, vesselClient})
 
 	if err := srv.Run(); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		fmt.Println(err)
 	}
 }
