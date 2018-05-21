@@ -37,6 +37,6 @@ WORKDIR /app
 COPY --from=builder /go/src/github.com/dillonlpeterson/shippy-consignment-service/shippy-consignment-service .
 
 # As usual, run the binary!
-CMD ["./consignment-service"]
+CMD ["./shippy-consignment-service"]
 
 # Code must be pushed up to Git so that it can pull in other services.
