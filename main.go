@@ -43,7 +43,7 @@ func main() {
 
 	srv.Init()
 
-	pb.RegisterShippingServiceHandler(srv.Server(), &service{repo, vesselClient})
+	pb.RegisterShippingServiceHandler(srv.Server(), &handler{session, vesselClient})
 
 	if err := srv.Run(); err != nil {
 		fmt.Println(err)

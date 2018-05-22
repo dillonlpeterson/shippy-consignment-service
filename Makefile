@@ -6,7 +6,7 @@ build:
 	docker build -t shippy-consignment-service:latest .
 	#docker push dillonlpeterson/shippy-consignment-service:latest 
 run: 
-	docker run -p 50051:50051 -e MICRO_SERVER_ADDRESS=:50051 -e MICRO_REGISTRY=mdns shippy-consignment-service
+	docker run -p 50051:50051 -e MICRO_SERVER_ADDRESS=:50051 -e MICRO_REGISTRY=mdns shippy-consignment-service -e DB_HOST=datastore:27017
 
 
 

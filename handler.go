@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"golang.org/x/net/context"
+	mgo "gopkg.in/mgo.v2"
 
 	pb "github.com/dillonlpeterson/shippy-consignment-service/proto/consignment"
 	vesselProto "github.com/dillonlpeterson/shippy-vessel-service/proto/vessel"
@@ -14,6 +15,7 @@ import (
 // in the generate code itself for the exact method signatures etc. to
 // give you a better idea
 type handler struct {
+	session      *mgo.Session
 	VesselClient vesselProto.VesselServiceClient
 }
 
