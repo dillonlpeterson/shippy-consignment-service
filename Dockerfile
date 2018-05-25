@@ -34,7 +34,7 @@ WORKDIR /app
 #ADD consignment-service /app/consignment-service 
 # Instead of pulling binary from Host machine, we pill it from the container named builder!
 # Copies into /app directory, which is the current working directory.
-COPY --from=builder /go/src/github.com/dillonlpeterson/shippy-consignment-service/shippy-consignment-service .
+COPY --from=builder /go/src/github.com/dillonlpeterson/shippy-consignment-service .
 
 # As usual, run the binary!
 CMD ["./shippy-consignment-service"]
