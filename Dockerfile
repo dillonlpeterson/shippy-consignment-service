@@ -11,11 +11,7 @@ COPY . .
 
 # Here we are pulling in godep, which is a dependency management tool
 # We're going to use godep instead of go get (Gets fussy with sub-packages sometimes)
-RUN go get -u github.com/golang/dep/cmd/dep
-
-# Create a dep project, and run 'ensure', which will pull in all of the 
-# dependencies of this directory.
-RUN dep init && dep ensure 
+RUN go get
 
 # Build the binary, with a few flags that will allow us 
 # to run the binary in Alpine. 
