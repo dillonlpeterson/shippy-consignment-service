@@ -5,7 +5,7 @@ build:
 	# Builds an image by the name consignment-service (Dot means that build process looks in current directory)
 	#docker build -t dillonlpeterson/consignment .
 	#docker push dillonlpeterson/consignment:latest 
-	docker build -t consignment-service 
+	docker build -t consignment-service .
 run: 
 	docker run -d --net="host" \
 		-p 50052 \

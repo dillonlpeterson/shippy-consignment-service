@@ -16,6 +16,7 @@ import (
 	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/metadata"
 	"github.com/micro/go-micro/server"
+	_ "github.com/micro/go-plugins/registry/mdns"
 )
 
 const (
