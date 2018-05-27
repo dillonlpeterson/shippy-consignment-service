@@ -90,8 +90,6 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 			return err
 		}
 		log.Println("Should be fine")
-		fun := fn(ctx, req, resp)
-		log.Println("Should make it here")
-		return fun
+		return fn(ctx, req, resp)
 	}
 }
