@@ -81,7 +81,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		log.Println("Authenticating with token: ", token)
 
 		// Auth here
-		authClient := userService.NewUserServiceClient("shippy.user", microclient.DefaultClient)
+		authClient := userService.NewUserServiceClient("go.micro.srv.user", microclient.DefaultClient)
 		_, err := authClient.ValidateToken(ctx, &userService.Token{
 			Token: token,
 		})
@@ -90,6 +90,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 			return err
 		}
 		log.Println("Should be fine")
-		return fn(ctx, req, resp)
+		err = fn(ctx, req, resp)
+		return err
 	}
 }
