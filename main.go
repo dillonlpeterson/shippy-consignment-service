@@ -89,6 +89,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 			log.Println("Not valid token")
 			return err
 		}
+		log.Println("Should be fine")
 		err = fn(ctx, req, resp)
 		return err
 	}
