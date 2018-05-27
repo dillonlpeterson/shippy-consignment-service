@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"context"
+	"golang.org/x/net/context"
 
 	userService "github.com/dillonlpeterson/shippy-user-service/proto/user"
 	vesselProto "github.com/dillonlpeterson/shippy-vessel-service/proto/vessel"
