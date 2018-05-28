@@ -35,4 +35,4 @@ COPY --from=builder /go/src/github.com/dillonlpeterson/shippy-consignment-servic
 # As usual, run the binary!
 CMD ["./shippy-consignment-service"]
 
-# Code must be pushed up to Git so that it can pull in other services.
+# Code must be pushed up to Git so that it can pull in other services
