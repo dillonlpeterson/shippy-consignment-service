@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -11,6 +12,7 @@ import (
 
 	pb "github.com/dillonlpeterson/shippy-consignment-service/proto/consignment"
 	micro "github.com/micro/go-micro"
+	"github.com/micro/go-micro/metadata"
 	"github.com/micro/go-micro/server"
 	_ "github.com/micro/go-plugins/registry/mdns"
 )
@@ -46,7 +48,7 @@ func main() {
 		micro.Name("go.micro.srv.consignment"),
 		micro.Version("latest"),
 		// Our auth middleware
-		micro.WrapHandler(AuthWrapper),
+		//micro.WrapHandler(AuthWrapper),
 	)
 
 	vesselClient := vesselProto.NewVesselServiceClient("go.micro.srv.vessel", srv.Client())
@@ -68,28 +70,28 @@ func main() {
 // an error is returned.
 func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, res interface{}) error {
-		//if os.Getenv("DISABLE_AUTH") == "true" {
-		//	return fn(ctx, req, res)
-		//}
-		/*
-			meta, ok := metadata.FromContext(ctx)
-			if !ok {
-				return errors.New("no auth meta-data found in request")
-			}
+		if os.Getenv("DISABLE_AUTH") == "true" {
+			return fn(ctx, req, res)
+		}
 
-			// Note this is now uppercase (not entirely sure why this is...)
-			token := meta["Token"]
-			fmt.Println("Authenticating with token: ", token)
+		meta, ok := metadata.FromContext(ctx)
+		if !ok {
+			return errors.New("no auth meta-data found in request")
+		}
 
-			// Auth here
-			authClient := userService.NewUserServiceClient("go.micro.srv.user", srv.Client())
-			_, err := authClient.ValidateToken(context.Background(), &userService.Token{
-				Token: token,
-			})
-			if err != nil {
-				return err
-			}
-		*/
+		// Note this is now uppercase (not entirely sure why this is...)
+		token := meta["Token"]
+		fmt.Println("Authenticating with token: ", token)
+
+		// Auth here
+		authClient := userService.NewUserServiceClient("go.micro.srv.user", srv.Client())
+		_, err := authClient.ValidateToken(context.Background(), &userService.Token{
+			Token: token,
+		})
+		if err != nil {
+			return err
+		}
+
 		return fn(ctx, req, res)
 	}
 }
