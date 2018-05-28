@@ -72,7 +72,8 @@ func main() {
 func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, resp interface{}) error {
 		if os.Getenv("DISABLE_AUTH") == "true" {
-			return fn(ctx, req, resp)
+			err := fn(ctx, req, resp)
+			return err
 		}
 		meta, ok := metadata.FromContext(ctx)
 		if !ok {
@@ -93,7 +94,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 			return err
 		}
 		log.Println("Should be fine")
-		err = fn(ctx, req, resp)
+		err := fn(ctx, req, resp)
 		return err
 	}
 }
