@@ -48,7 +48,7 @@ func main() {
 		micro.Name("go.micro.srv.consignment"),
 		micro.Version("latest"),
 		// Our auth middleware
-		//micro.WrapHandler(AuthWrapper),
+		micro.WrapHandler(AuthWrapper),
 	)
 
 	vesselClient := vesselProto.NewVesselServiceClient("go.micro.srv.vessel", srv.Client())
