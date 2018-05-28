@@ -70,10 +70,10 @@ func main() {
 // If valid, the call is passed along to the handler. If not,
 // an error is returned.
 func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
-	return func(ctx context.Context, req server.Request, resp interface{}) error {
-		if os.Getenv("DISABLE_AUTH") == "true" {
-			return fn(ctx, req, resp)
-		}
+	return func(ctx context.Context, req server.Request, res interface{}) error {
+		//if os.Getenv("DISABLE_AUTH") == "true" {
+		//	return fn(ctx, req, res)
+		//}
 		meta, ok := metadata.FromContext(ctx)
 		if !ok {
 			return errors.New("no auth meta-data found in request")
@@ -85,7 +85,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 
 		// Auth here
 		authClient := userService.NewUserServiceClient("go.micro.srv.user", srv.Client())
-		_, err := authClient.ValidateToken(ctx, &userService.Token{
+		_, err := authClient.ValidateToken(context.Background(), &userService.Token{
 			Token: token,
 		})
 		if err != nil {
