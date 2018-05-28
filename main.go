@@ -1,19 +1,16 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"os"
 
 	"golang.org/x/net/context"
 
-	userService "github.com/dillonlpeterson/shippy-user-service/proto/user"
 	vesselProto "github.com/dillonlpeterson/shippy-vessel-service/proto/vessel"
 
 	pb "github.com/dillonlpeterson/shippy-consignment-service/proto/consignment"
 	micro "github.com/micro/go-micro"
-	"github.com/micro/go-micro/metadata"
 	"github.com/micro/go-micro/server"
 	_ "github.com/micro/go-plugins/registry/mdns"
 )
@@ -74,25 +71,25 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		//if os.Getenv("DISABLE_AUTH") == "true" {
 		//	return fn(ctx, req, res)
 		//}
-		'''
-		meta, ok := metadata.FromContext(ctx)
-		if !ok {
-			return errors.New("no auth meta-data found in request")
-		}
+		/*
+			meta, ok := metadata.FromContext(ctx)
+			if !ok {
+				return errors.New("no auth meta-data found in request")
+			}
 
-		// Note this is now uppercase (not entirely sure why this is...)
-		token := meta["Token"]
-		fmt.Println("Authenticating with token: ", token)
+			// Note this is now uppercase (not entirely sure why this is...)
+			token := meta["Token"]
+			fmt.Println("Authenticating with token: ", token)
 
-		// Auth here
-		authClient := userService.NewUserServiceClient("go.micro.srv.user", srv.Client())
-		_, err := authClient.ValidateToken(context.Background(), &userService.Token{
-			Token: token,
-		})
-		if err != nil {
-			return err
-		}
-		'''
+			// Auth here
+			authClient := userService.NewUserServiceClient("go.micro.srv.user", srv.Client())
+			_, err := authClient.ValidateToken(context.Background(), &userService.Token{
+				Token: token,
+			})
+			if err != nil {
+				return err
+			}
+		*/
 		err = fn(ctx, req, res)
 		return err
 	}
