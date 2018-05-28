@@ -13,7 +13,6 @@ import (
 
 	pb "github.com/dillonlpeterson/shippy-consignment-service/proto/consignment"
 	micro "github.com/micro/go-micro"
-	microclient "github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/metadata"
 	"github.com/micro/go-micro/server"
 	_ "github.com/micro/go-plugins/registry/mdns"
@@ -22,6 +21,10 @@ import (
 const (
 	port        = ":50051"
 	defaultHost = "localhost:27017"
+)
+
+var (
+	srv micro.Service
 )
 
 func main() {
@@ -81,7 +84,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		log.Println("Authenticating with token: ", token)
 
 		// Auth here
-		authClient := userService.NewUserServiceClient("go.micro.srv.user", microclient.DefaultClient)
+		authClient := userService.NewUserServiceClient("go.micro.srv.user", srv.Client())
 		_, err := authClient.ValidateToken(ctx, &userService.Token{
 			Token: token,
 		})
