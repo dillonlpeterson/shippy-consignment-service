@@ -91,7 +91,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		if err != nil {
 			return err
 		}
-		err = fn(ctx, req, resp)
+		err = fn(ctx, req, res)
 		return err
 	}
 }
