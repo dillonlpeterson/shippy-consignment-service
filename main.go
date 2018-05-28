@@ -74,6 +74,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		//if os.Getenv("DISABLE_AUTH") == "true" {
 		//	return fn(ctx, req, res)
 		//}
+		'''
 		meta, ok := metadata.FromContext(ctx)
 		if !ok {
 			return errors.New("no auth meta-data found in request")
@@ -81,7 +82,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 
 		// Note this is now uppercase (not entirely sure why this is...)
 		token := meta["Token"]
-		log.Println("Authenticating with token: ", token)
+		fmt.Println("Authenticating with token: ", token)
 
 		// Auth here
 		authClient := userService.NewUserServiceClient("go.micro.srv.user", srv.Client())
@@ -91,6 +92,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		if err != nil {
 			return err
 		}
+		'''
 		err = fn(ctx, req, res)
 		return err
 	}
