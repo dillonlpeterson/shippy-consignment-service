@@ -83,7 +83,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		fmt.Println("Authenticating with token: ", token)
 
 		// Auth here
-		authClient := userService.NewUserServiceClient("shippy.auth", srv.Client())
+		authClient := userService.NewAuthClient("shippy.auth", srv.Client())
 		_, err := authClient.ValidateToken(context.Background(), &userService.Token{
 			Token: token,
 		})
