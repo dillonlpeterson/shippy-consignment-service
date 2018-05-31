@@ -44,13 +44,13 @@ func main() {
 	// Set-up our gRPC server.
 	srv := micro.NewService(
 		// Must match package name given in proto file!
-		micro.Name("go.micro.srv.consignment"),
+		micro.Name("shippy.consignment"),
 		micro.Version("latest"),
 		// Our auth middleware
 		micro.WrapHandler(AuthWrapper),
 	)
 
-	vesselClient := vesselProto.NewVesselServiceClient("go.micro.srv.vessel", srv.Client())
+	vesselClient := vesselProto.NewVesselServiceClient("shippy.vessel", srv.Client())
 
 	srv.Init()
 
@@ -83,7 +83,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		fmt.Println("Authenticating with token: ", token)
 
 		// Auth here
-		authClient := userService.NewUserServiceClient("go.micro.srv.user", srv.Client())
+		authClient := userService.NewUserServiceClient("shippy.auth", srv.Client())
 		_, err := authClient.ValidateToken(context.Background(), &userService.Token{
 			Token: token,
 		})
