@@ -9,7 +9,7 @@ import (
 	"golang.org/x/net/context"
 
 	pb "github.com/dillonlpeterson/shippy-consignment-service/proto/consignment"
-	userService "github.com/dillonlpeterson/shippy-user-service/proto/user"
+	userService "github.com/dillonlpeterson/shippy-user-service/proto/auth"
 	vesselProto "github.com/dillonlpeterson/shippy-vessel-service/proto/vessel"
 	micro "github.com/micro/go-micro"
 	"github.com/micro/go-micro/metadata"
