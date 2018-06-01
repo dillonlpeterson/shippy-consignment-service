@@ -14,6 +14,7 @@ import (
 	micro "github.com/micro/go-micro"
 	"github.com/micro/go-micro/metadata"
 	"github.com/micro/go-micro/server"
+	k8s "github.com/micro/kubernetes/go/micro"
 )
 
 const (
@@ -42,7 +43,7 @@ func main() {
 	}
 
 	// Set-up our gRPC server.
-	srv := micro.NewService(
+	srv := k8s.NewService(
 		// Must match package name given in proto file!
 		micro.Name("shippy.consignment"),
 		micro.Version("latest"),
